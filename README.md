@@ -1,2 +1,1 @@
-# SGOL
-Simple Graphic's Optimized Library (SGOL)
+# Simple Graphic's Optimized Library (SGOL)
