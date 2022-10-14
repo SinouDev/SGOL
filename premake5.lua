@@ -1,38 +1,10 @@
-project "SGOL"
-   kind "ConsoleApp"
-   language "C++"
-   cppdialect "C++17"
-   targetdir "bin/%{cfg.buildcfg}"
-   staticruntime "off"
+-- premake5.lua
+workspace "SGOL"
+   architecture "x64"
+   configurations { "Debug", "Release", "Dist" }
+   startproject "SGOL-Test"
 
-   files { "src/**.h", "src/**.cpp", "include/**.hpp" }
+outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
-   targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
-   objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
-
-   includedirs
-   {
-      "include/"
-   }
-
-   filter "system:windows"
-      systemversion "latest"
-      defines { "_CRT_SECURE_NO_WARNINGS" }
-
-   filter "configurations:Debug"
-      defines { "_CRT_SECURE_NO_WARNINGS"  }
-      runtime "Debug"
-      symbols "On"
-
-   filter "configurations:Release"
-      defines { "_CRT_SECURE_NO_WARNINGS"  }
-      runtime "Release"
-      optimize "On"
-      symbols "On"
-
-   filter "configurations:Dist"
-      kind "WindowedApp"
-      defines { "_CRT_SECURE_NO_WARNINGS"  }
-      runtime "Release"
-      optimize "On"
-      symbols "Off"
+include "SGOL"
+include "SGOL-Test"
