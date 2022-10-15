@@ -12,10 +12,13 @@ int main(void)
 		
 	{
 		auto a = Reference::MakeShared<Player>(545U, 2441U);
+
+		std::cout << g_MemUse;
 		Reference::Shared<Entity> fd = Reference::MakeShared<Player>(54U, 64U);
 		
 		auto b = std::make_shared<Player>(5151U, 648U);
 		std::shared_ptr<Entity> fb = b;
+		std::cout << g_MemUse;
 		Reference::Shared<Entity> vecPtr = Reference::MakeShared<Player>(54U, 42U);
 		Reference::Unique<Entity> vecPtr1 = Reference::MakeUnique<Player>(100U, 114U);
 		//Reference::Unique<Entity> sss = vecPtr1;

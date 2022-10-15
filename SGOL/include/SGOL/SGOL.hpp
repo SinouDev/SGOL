@@ -11,7 +11,9 @@
 	#define __SGOL_HAS_INLINE
 	#define __SGOL_FORCEINLINE
 	#define __SGOL_HAS_NODISCARD
-	#define __SGOL_NO_CONSTEXPR
+	#define __SGOL_HAS_EXPLICIT
+	#define __SGOL_HAS_CONSTEXPR
+	#define __SGOL_HAS_NOEXCEPT
 #endif // __SGOL_ENABLE_ALL
 
 #ifndef __SGOL_NO_MACRO
@@ -36,12 +38,33 @@
 	#else
 		#define __SGOL_NODISCARD
 	#endif // __SGOL_HAS_NODISCARD
+
+	#ifdef __SGOL_HAS_EXPLICIT
+		#define __SGOL_EXPLICIT explicit
+	#else
+		#define __SGOL_EXPLICIT
+	#endif // __SGOL_HAS_EXPLICIT
+	
+	#ifdef __SGOL_HAS_CONSTEXPR
+		#define __SGOL_CONSTEXPR constexpr
+	#else
+		#define __SGOL_CONSTEXPR
+	#endif // __SGOL_HAS_CONSTEXPR
+	
+	#ifdef __SGOL_HAS_NOEXCEPT
+		#define __SGOL_NOEXCEPT noexcept
+	#else
+		#define __SGOL_NOEXCEPT
+	#endif // __SGOL_HAS_NOEXCEPT
 	
 	#ifdef __SGOL_ENABLE_ALL
 		#undef __SGOL_HAS_FASTCALL
 		#undef __SGOL_HAS_INLINE
 		#undef __SGOL_FORCEINLINE
 		#undef __SGOL_HAS_NODISCARD
+		#undef __SGOL_HAS_EXPLICIT
+		#undef __SGOL_HAS_CONSTEXPR
+		#undef __SGOL_HAS_NOEXCEPT
 	#endif // __SGOL_HAS_NODISCARD
 
 	#undef __SGOL_NO_MACRO
@@ -55,10 +78,72 @@
 
 struct MemUse
 {
-	size_t TotalAllocation = 0;
-	size_t TotalDeletion = 0;
 
-	inline size_t GetCurrentAllocation() const { return TotalAllocation - TotalDeletion; }
+	struct CurrentInUseAllocationInfo
+	{
+		size_t CurrentInUseAllocationSize = 0;
+		size_t CurrentInUseAllocationCount = 0;
+	};
+
+	class TotalAllocationDeallocationInfo
+	{
+
+	public:
+
+		// This operator method will add to the total allocations size and increment the count by 1
+		__SGOL_INLINE TotalAllocationDeallocationInfo& __SGOL_FASTCALL operator<<(size_t value) __SGOL_NOEXCEPT
+		{
+			m_TotalAllocationSize += value;
+			m_TotalAllocationCount++;
+			return *this;
+		}
+
+		// This operator method will add to the total deallocations size and increment the count by 1
+		__SGOL_INLINE TotalAllocationDeallocationInfo& __SGOL_FASTCALL operator>>(size_t value) __SGOL_NOEXCEPT
+		{
+			m_TotalDeallocationSize += value;
+			m_TotalDeallocationCount++;
+			return *this;
+		}
+
+		// This operator method will add to the total allocations size and increment the count by 1
+		__SGOL_INLINE TotalAllocationDeallocationInfo& operator+=(size_t value) __SGOL_NOEXCEPT
+		{
+			m_TotalAllocationSize += value;
+			m_TotalAllocationCount++;
+			return *this;
+		}
+
+		// This operator method will add to the total deallocations size and increment the count by 1
+		__SGOL_INLINE TotalAllocationDeallocationInfo& __SGOL_FASTCALL operator-=(size_t value) __SGOL_NOEXCEPT
+		{
+			m_TotalDeallocationSize += value;
+			m_TotalDeallocationCount++;
+			return *this;
+		}
+
+		// This operator method will calculate the current allocations size and count
+		__SGOL_NODISCARD __SGOL_INLINE CurrentInUseAllocationInfo __SGOL_FASTCALL operator~() const __SGOL_NOEXCEPT
+		{
+			return {
+				m_TotalAllocationSize - m_TotalDeallocationSize,
+				m_TotalAllocationCount - m_TotalDeallocationCount
+			};
+		}
+
+	private:
+
+		friend std::ostream& operator<< (std::ostream&, const MemUse::TotalAllocationDeallocationInfo&);
+
+	private:
+		size_t m_TotalAllocationCount = 0;
+		size_t m_TotalAllocationSize = 0;
+		size_t m_TotalDeallocationCount = 0;
+		size_t m_TotalDeallocationSize = 0;
+
+	} TotalAllocationDeallocation;
+
+	__SGOL_NODISCARD __SGOL_INLINE CurrentInUseAllocationInfo __SGOL_FASTCALL GetCurrentAllocation() const __SGOL_NOEXCEPT { return ~TotalAllocationDeallocation; }
 
 };
 
@@ -67,22 +152,36 @@ static MemUse g_MemUse;
 #include <stdlib.h>
 void* operator new(size_t size)
 {
-	g_MemUse.TotalAllocation += size;
+	g_MemUse.TotalAllocationDeallocation << size;
+	//g_MemUse.TotalAllocationDeallocation += size;
 	return malloc(size);
 }
 
 void operator delete(void* address, size_t size)
 {
-	g_MemUse.TotalDeletion += size;
+	g_MemUse.TotalAllocationDeallocation >> size;
+	//g_MemUse.TotalAllocationDeallocation -= size;
 	free(address);
+}
+
+std::ostream& operator<< (std::ostream& stream, const MemUse::CurrentInUseAllocationInfo& info)
+{
+	stream << "\tIn use Allocations: " << info.CurrentInUseAllocationCount << ", size: " << info.CurrentInUseAllocationSize << " Bytes";
+	return stream;
+}
+
+std::ostream& operator<< (std::ostream& stream, const MemUse::TotalAllocationDeallocationInfo& info)
+{
+	stream << "\tTotal Allocations: " << info.m_TotalAllocationCount << ", size: " << info.m_TotalAllocationSize << " Bytes" << std::endl;
+	stream << "\tTotal Deallocations: " << info.m_TotalDeallocationCount << ", size: " << info.m_TotalDeallocationSize << " Bytes";
+	return stream;
 }
 
 std::ostream& operator<< (std::ostream& stream, const MemUse& memUse)
 {
 	stream << "MemUse Table:----------------------------------------------------" << std::endl;
-	stream << "\tTotal Allocations: " << memUse.TotalAllocation << " Bytes" << std::endl;
-	stream << "\tTotal Deletions: " << memUse.TotalDeletion << " Bytes" << std::endl;
-	stream << "\tCurrent Allocations: " << memUse.GetCurrentAllocation() << " Bytes" << std::endl;
+	stream << memUse.TotalAllocationDeallocation << std::endl;
+	stream << memUse.GetCurrentAllocation() << std::endl;
 	stream << "-----------------------------------------------------------------" << std::endl;
 	return stream;
 }
@@ -90,6 +189,8 @@ std::ostream& operator<< (std::ostream& stream, const MemUse& memUse)
 
 #include <type_traits>
 
+// ****** Simple Graphic's Optimized Library (SGOL) ******
+//   Simple c++ template library just like std template library on c++ but focused more on performanceand graphics applications like Game Engines, Renderersand so on
 namespace SGOL {
 	template<bool enable, typename T = void>
 	struct EnableIf {};

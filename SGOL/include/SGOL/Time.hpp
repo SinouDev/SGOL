@@ -5,18 +5,10 @@
 
 #include "SGOL.hpp"
 
-/// <summary>
-/// 
-/// </summary>
 namespace SGOL {
-	/// <summary>
-	/// 
-	/// </summary>
+
 	namespace Time {
 
-		/// <summary>
-		/// 
-		/// </summary>
 		struct TimeComponents {
 			uint64_t milli_seconds;
 			uint64_t seconds;
@@ -28,11 +20,6 @@ namespace SGOL {
 			std::time_t time;
 		};
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="time"></param>
-		/// <returns></returns>
 		static TimeComponents GetTime(std::time_t time)
 		{
 			std::tm* st = std::localtime(&time);
@@ -46,11 +33,6 @@ namespace SGOL {
 					 time };
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="components"></param>
-		/// <param name="time"></param>
 		static void GetTime(TimeComponents& components, std::time_t time)
 		{
 			std::tm* st = std::localtime(&time);

@@ -2,6 +2,9 @@
 
 #ifdef __SGOL_TEST_SAMPLE
 #undef __SGOL_TEST_SAMPLE
+
+#include <iostream>
+
 class Entity
 {
 public:
