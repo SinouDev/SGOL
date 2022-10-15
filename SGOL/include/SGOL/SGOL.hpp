@@ -10,6 +10,7 @@
 	#define __SGOL_HAS_EXPLICIT
 	#define __SGOL_HAS_CONSTEXPR
 	#define __SGOL_HAS_NOEXCEPT
+	#define __SGOL_HAS__CDECL
 #endif // __SGOL_ENABLE_ALL
 
 #ifdef __SGOL_HAS_FASTCALL
@@ -52,6 +53,12 @@
 	#define __SGOL_NOEXCEPT
 #endif // __SGOL_HAS_NOEXCEPT
 
+#ifdef __SGOL_HAS__CDECL
+#define __SGOL__CDECL __cdecl
+#else
+#define __SGOL__CDECL
+#endif // __SGOL_HAS__CDECL
+
 #ifdef __SGOL_ENABLE_ALL
 	#undef __SGOL_HAS_FASTCALL
 	#undef __SGOL_HAS_INLINE
@@ -60,6 +67,7 @@
 	#undef __SGOL_HAS_EXPLICIT
 	#undef __SGOL_HAS_CONSTEXPR
 	#undef __SGOL_HAS_NOEXCEPT
+	#undef __SGOL_HAS__CDECL
 #endif // __SGOL_HAS_NODISCARD
 
 #undef __SGOL_NO_MACRO
@@ -143,13 +151,25 @@ struct MemUse
 static MemUse g_MemUse;
 
 #include <stdlib.h>
-void* operator new(size_t size)
+void* __SGOL__CDECL operator new(size_t size)
 {
 	g_MemUse.TotalAllocationDeallocation << size;
 	return malloc(size);
 }
 
-void operator delete(void* address, size_t size)
+void* __SGOL__CDECL operator new[](size_t size)
+{
+	g_MemUse.TotalAllocationDeallocation << size;
+	return malloc(size);
+}
+
+void __SGOL__CDECL operator delete(void* address, size_t size) __SGOL_NOEXCEPT
+{
+	g_MemUse.TotalAllocationDeallocation >> size;
+	free(address);
+}
+
+void __SGOL__CDECL operator delete[](void* address, size_t size) __SGOL_NOEXCEPT
 {
 	g_MemUse.TotalAllocationDeallocation >> size;
 	free(address);
@@ -183,6 +203,14 @@ std::ostream& operator<< (std::ostream& stream, const MemUse& memUse)
 // ****** Simple Graphic's Optimized Library (SGOL) ******
 //   Simple c++ template library just like std template library on c++ but focused more on performanceand graphics applications like Game Engines, Renderersand so on
 namespace SGOL {
+
+	//char* l[] = {"%03.2f Bytes", "%03.2f KB", "%03.2f MB" , "%03.2f GB", "%03.2f TB"};
+
+	//void a()
+	//{
+	//	std::cout << l[0];
+	//}
+
 	template<bool enable, typename T = void>
 	struct EnableIf {};
 

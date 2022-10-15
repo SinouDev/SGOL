@@ -1,6 +1,7 @@
 #define __SGOL_TEST_SAMPLE
 #define __SGOL_ENABLE_MEM_TRACKER
 #include "SGOL/Reference.hpp"
+#include "SGOL/Array2D.hpp"
 
 #include "EntityTest.hpp"
 
@@ -9,6 +10,8 @@
 int main(void)
 {
     using namespace SGOL;
+
+	//a();
 		
 	{
 		auto a = Reference::MakeShared<Player>(545U, 2441U);
@@ -49,6 +52,8 @@ int main(void)
 		//Player pl(10U, 50U);
 		
 		//std::cin.get();
+		SGOL::Array2D<Player> array(400, 400);
+		
 	}
 
 	std::cout << g_MemUse;

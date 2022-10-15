@@ -53,6 +53,12 @@ class Player : public Entity
 {
 public:
 
+	Player()
+		: Entity(0U, 0U)
+	{
+
+	}
+
 	Player(uint32_t x, uint32_t y)
 		: Entity(x, y)
 	{

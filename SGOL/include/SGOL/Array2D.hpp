@@ -25,7 +25,9 @@ namespace SGOL {
 
 		~Array2D()
 		{
-			delete[] m_Data;
+			if constexpr (std::is_class_v<DataType>)
+				delete[] m_Data;
+			else delete m_Data;
 		}
 
 		__SGOL_INLINE operator const DataType* ()
