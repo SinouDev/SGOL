@@ -3,7 +3,7 @@
 #include "SGOL.hpp"
 
 namespace SGOL {
-
+	
 	//
 	// Simple 2D array class
 	//

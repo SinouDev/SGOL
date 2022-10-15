@@ -72,8 +72,9 @@
 
 #undef __SGOL_NO_MACRO
 
+#define __SGOL_ENABLE_MEM_TRACKER
+
 #ifdef __SGOL_ENABLE_MEM_TRACKER
-#undef __SGOL_ENABLE_MEM_TRACKER
 
 #include <iostream>
 
@@ -175,41 +176,23 @@ void __SGOL__CDECL operator delete[](void* address, size_t size) __SGOL_NOEXCEPT
 	free(address);
 }
 
-std::ostream& operator<< (std::ostream& stream, const MemUse::CurrentInUseAllocationInfo& info)
-{
-	stream << "\tIn use Allocations: " << info.CurrentInUseAllocationCount << ", size: " << info.CurrentInUseAllocationSize << " Bytes";
-	return stream;
-}
-
-std::ostream& operator<< (std::ostream& stream, const MemUse::TotalAllocationDeallocationInfo& info)
-{
-	stream << "\tTotal Allocations: " << info.m_TotalAllocationCount << ", size: " << info.m_TotalAllocationSize << " Bytes" << std::endl;
-	stream << "\tTotal Deallocations: " << info.m_TotalDeallocationCount << ", size: " << info.m_TotalDeallocationSize << " Bytes";
-	return stream;
-}
-
-std::ostream& operator<< (std::ostream& stream, const MemUse& memUse)
-{
-	stream << "MemUse Table:----------------------------------------------------" << std::endl;
-	stream << memUse.TotalAllocationDeallocation << std::endl;
-	stream << memUse.GetCurrentAllocation() << std::endl;
-	stream << "-----------------------------------------------------------------" << std::endl;
-	return stream;
-}
 #endif // __SGOL_ENABLE_MEM_TRACKER
 
 #include <type_traits>
+#include <stdio.h>
 
 // ****** Simple Graphic's Optimized Library (SGOL) ******
 //   Simple c++ template library just like std template library on c++ but focused more on performanceand graphics applications like Game Engines, Renderersand so on
 namespace SGOL {
 
-	//char* l[] = {"%03.2f Bytes", "%03.2f KB", "%03.2f MB" , "%03.2f GB", "%03.2f TB"};
+	
 
-	//void a()
-	//{
-	//	std::cout << l[0];
-	//}
+    static void ConvertToBytesUnits(double value, char* buffer)
+	{
+		constexpr static char* s_BytesFormats[] = {"%.0f Bytes", "%.2f KB", "%.2f MB" , "%.2f GB", "%.2f TB"};
+		auto value_power = static_cast<size_t>(log10(value) / 3.0);
+		sprintf(buffer, s_BytesFormats[value_power], value / (pow(1000.0, value_power) + 1ULL));
+	}
 
 	template<bool enable, typename T = void>
 	struct EnableIf {};
@@ -250,3 +233,35 @@ namespace SGOL {
 
 	};
 }
+
+#ifdef __SGOL_ENABLE_MEM_TRACKER
+#undef __SGOL_ENABLE_MEM_TRACKER
+
+std::ostream& operator<< (std::ostream& stream, const MemUse::CurrentInUseAllocationInfo& info)
+{
+	char buf[64];
+	SGOL::ConvertToBytesUnits(info.CurrentInUseAllocationSize, buf);
+	stream << "\tIn use Allocations: " << info.CurrentInUseAllocationCount << ", size: " << buf;
+	return stream;
+}
+
+std::ostream& operator<< (std::ostream& stream, const MemUse::TotalAllocationDeallocationInfo& info)
+{
+	char allocationBuf[64];
+	SGOL::ConvertToBytesUnits(info.m_TotalAllocationSize, allocationBuf);
+	char deallocationBuf[64];
+	SGOL::ConvertToBytesUnits(info.m_TotalAllocationSize, deallocationBuf);
+	stream << "\tTotal Allocations: " << info.m_TotalAllocationCount << ", size: " << allocationBuf << std::endl;
+	stream << "\tTotal Deallocations: " << info.m_TotalDeallocationCount << ", size: " << deallocationBuf;
+	return stream;
+}
+
+std::ostream& operator<< (std::ostream& stream, const MemUse& memUse)
+{
+	stream << "MemUse Table:----------------------------------------------------" << std::endl;
+	stream << memUse.TotalAllocationDeallocation << std::endl;
+	stream << memUse.GetCurrentAllocation() << std::endl;
+	stream << "-----------------------------------------------------------------" << std::endl;
+	return stream;
+}
+#endif // __SGOL_ENABLE_MEM_TRACKER
