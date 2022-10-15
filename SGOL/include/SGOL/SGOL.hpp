@@ -153,14 +153,12 @@ static MemUse g_MemUse;
 void* operator new(size_t size)
 {
 	g_MemUse.TotalAllocationDeallocation << size;
-	//g_MemUse.TotalAllocationDeallocation += size;
 	return malloc(size);
 }
 
 void operator delete(void* address, size_t size)
 {
 	g_MemUse.TotalAllocationDeallocation >> size;
-	//g_MemUse.TotalAllocationDeallocation -= size;
 	free(address);
 }
 
