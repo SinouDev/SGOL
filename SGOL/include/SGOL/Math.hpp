@@ -1,6 +1,6 @@
 #pragma once
 
-#define MATH_UTILS_DEFINED
+#define MATH_SGOL_DEFINED
 
 #include "glm/glm.hpp"
 #include "glm/gtx/fast_square_root.hpp"
@@ -13,11 +13,11 @@
 #include <limits>
 #include <cmath>
 
-#include "Utils.h"
+#include "SGOL.hpp"
 
-//extern "C" float __UTILS_FASTCALL Q_Sqrt1(float n);
+//extern "C" float __SGOL_FASTCALL Q_Sqrt1(float n);
 
-namespace Utils {
+namespace SGOL {
 
 	/// <summary>
 	/// Math wrapper library
@@ -66,188 +66,188 @@ namespace Utils {
 		/// <param name="t"></param>
 		/// <returns></returns>
 		template<typename T>
-		static __UTILS_INLINE T __UTILS_FASTCALL UnitVec(const T& t)
+		static __SGOL_INLINE T __SGOL_FASTCALL UnitVec(const T& t)
 		{
 			return t / Q_Length(t);
 		}
 
 		template<typename T>
-		static __UTILS_INLINE T __UTILS_FASTCALL Normalize(const T& t)
+		static __SGOL_INLINE T __SGOL_FASTCALL Normalize(const T& t)
 		{
 			return glm::normalize(t);
 		}
 
 		template<typename T>
-		static __UTILS_INLINE T __UTILS_FASTCALL Abs(const T& a)
+		static __SGOL_INLINE T __SGOL_FASTCALL Abs(const T& a)
 		{
 			return glm::abs(a);
 		}
 
-		static __UTILS_INLINE float __UTILS_FASTCALL Pow(float xx, float yx)
+		static __SGOL_INLINE float __SGOL_FASTCALL Pow(float xx, float yx)
 		{
 			return glm::pow(xx, yx);
 		}
 
-		static __UTILS_INLINE bool __UTILS_FASTCALL NearZero(const Vec3& vector)
+		static __SGOL_INLINE bool __SGOL_FASTCALL NearZero(const Vec3& vector)
 		{
 			Vec3 tmp = Abs(vector);
 			const auto s = 1e-8;
 			return (tmp.x < s) && (tmp.y < s) && (tmp.z < s);
 		}
 
-		static __UTILS_INLINE float __UTILS_FASTCALL Reflectness(float cosine, float ref_index)
+		static __SGOL_INLINE float __SGOL_FASTCALL Reflectness(float cosine, float ref_index)
 		{
 			float r0 = (1.0f - ref_index) / (1.0f + ref_index);
 			r0 = r0 * r0;
 			return r0 + (1.0f - r0) * Pow(1.0f - cosine, 5);
 		}
 
-		static __UTILS_INLINE float __UTILS_FASTCALL Sqrt(float n)
+		static __SGOL_INLINE float __SGOL_FASTCALL Sqrt(float n)
 		{
 			return glm::sqrt(n);
 		}
 
-		static __UTILS_INLINE float __UTILS_FASTCALL Rsqrt(float n)
+		static __SGOL_INLINE float __SGOL_FASTCALL Rsqrt(float n)
 		{
 			return glm::inversesqrt(n);
 		}
 
 		template<typename T>
-		static __UTILS_INLINE T __UTILS_FASTCALL Floor(const T& a)
+		static __SGOL_INLINE T __SGOL_FASTCALL Floor(const T& a)
 		{
 			return glm::floor(a);
 		}
 
-		static __UTILS_INLINE float __UTILS_FASTCALL Floor(float a)
+		static __SGOL_INLINE float __SGOL_FASTCALL Floor(float a)
 		{
 			return glm::floor(a);
 		}
 
 		template<typename T>
-		static __UTILS_INLINE T __UTILS_FASTCALL Rotate(const Quat& t, const T& v)
+		static __SGOL_INLINE T __SGOL_FASTCALL Rotate(const Quat& t, const T& v)
 		{
 			return glm::rotate(t, v);
 		}
 
 		template<typename T>
-		static __UTILS_INLINE float __UTILS_FASTCALL Dot(const T& x, const T& y)
+		static __SGOL_INLINE float __SGOL_FASTCALL Dot(const T& x, const T& y)
 		{
 			return glm::dot(x, y);
 		}
 
-		static __UTILS_INLINE Quat __UTILS_FASTCALL AngleAxis(float angle, const Vec3& axis)
+		static __SGOL_INLINE Quat __SGOL_FASTCALL AngleAxis(float angle, const Vec3& axis)
 		{
 			return glm::angleAxis(angle, axis);
 		}
 
 		template<typename T>
-		static __UTILS_INLINE T __UTILS_FASTCALL Cross(const T& x, const T& y)
+		static __SGOL_INLINE T __SGOL_FASTCALL Cross(const T& x, const T& y)
 		{
 			return glm::cross(x, y);
 		}
 
 		template<typename T>
-		static __UTILS_INLINE T __UTILS_FASTCALL Min(const T& a, const T& b)
+		static __SGOL_INLINE T __SGOL_FASTCALL Min(const T& a, const T& b)
 		{
 			return glm::min(a, b);
 		}
 
 		template<typename T>
-		static __UTILS_INLINE T __UTILS_FASTCALL Max(const T& a, const T& b)
+		static __SGOL_INLINE T __SGOL_FASTCALL Max(const T& a, const T& b)
 		{
 			return glm::max(a, b);
 		}
 
 		template<typename T>
-		static __UTILS_INLINE T __UTILS_FASTCALL Log(const T& a)
+		static __SGOL_INLINE T __SGOL_FASTCALL Log(const T& a)
 		{
 			return glm::log(a);
 		}
 
 		template<typename T>
-		static __UTILS_INLINE float __UTILS_FASTCALL Sin(const T& a)
+		static __SGOL_INLINE float __SGOL_FASTCALL Sin(const T& a)
 		{
 			return glm::sin(a);
 		}
 
 		template<typename T>
-		static __UTILS_INLINE float __UTILS_FASTCALL Cos(const T& a)
+		static __SGOL_INLINE float __SGOL_FASTCALL Cos(const T& a)
 		{
 			return glm::cos(a);
 		}
 
 		template<typename T>
-		static __UTILS_INLINE float __UTILS_FASTCALL Tan(const T& a)
+		static __SGOL_INLINE float __SGOL_FASTCALL Tan(const T& a)
 		{
 			return glm::tan(a);
 		}
 
-		static __UTILS_INLINE float __UTILS_FASTCALL Radians(float a)
+		static __SGOL_INLINE float __SGOL_FASTCALL Radians(float a)
 		{
 			return glm::radians(a);
 		}
 
-		static __UTILS_INLINE float __UTILS_FASTCALL Degrees(float a)
+		static __SGOL_INLINE float __SGOL_FASTCALL Degrees(float a)
 		{
 			return glm::degrees(a);
 		}
 
-		static __UTILS_INLINE float __UTILS_FASTCALL Acos(float a)
+		static __SGOL_INLINE float __SGOL_FASTCALL Acos(float a)
 		{
 			return glm::acos(a);
 		}
 
-		static __UTILS_INLINE float __UTILS_FASTCALL Atan2(float yx, float xx)
+		static __SGOL_INLINE float __SGOL_FASTCALL Atan2(float yx, float xx)
 		{
 			return std::atan2(yx, xx);
 		}
 
 		template<typename T>
-		static __UTILS_INLINE T __UTILS_FASTCALL Pi()
+		static __SGOL_INLINE T __SGOL_FASTCALL Pi()
 		{
 			return glm::pi<T>();
 		}
 
 		template<typename T>
-		static __UTILS_INLINE T __UTILS_FASTCALL TwoPi()
+		static __SGOL_INLINE T __SGOL_FASTCALL TwoPi()
 		{
 			return glm::two_pi<T>();
 		}
 
 		template<typename T>
-		static __UTILS_INLINE T __UTILS_FASTCALL Clamp(const T& x, const T& min, const T& max)
+		static __SGOL_INLINE T __SGOL_FASTCALL Clamp(const T& x, const T& min, const T& max)
 		{
 			return glm::clamp(x, min, max);
 		}
 
 		template<typename T>
-		static __UTILS_INLINE T __UTILS_FASTCALL Clamp(const T& x, float min, float max)
+		static __SGOL_INLINE T __SGOL_FASTCALL Clamp(const T& x, float min, float max)
 		{
 			return glm::clamp(x, min, max);
 		}
 
-		static __UTILS_INLINE Mat4 __UTILS_FASTCALL PerspectiveFov(float fov, float width, float height, float near, float far)
+		static __SGOL_INLINE Mat4 __SGOL_FASTCALL PerspectiveFov(float fov, float width, float height, float near, float far)
 		{
 			return glm::perspectiveFov(fov, width, height, near, far);
 		}
 
 		template<typename T>
-		static __UTILS_INLINE T __UTILS_FASTCALL Inverse(const T& a)
+		static __SGOL_INLINE T __SGOL_FASTCALL Inverse(const T& a)
 		{
 			return glm::inverse(a);
 		}
 
-		static __UTILS_INLINE Mat4 __UTILS_FASTCALL LookAt(const Vec3& eye, const Vec3& center, const Vec3& up)
+		static __SGOL_INLINE Mat4 __SGOL_FASTCALL LookAt(const Vec3& eye, const Vec3& center, const Vec3& up)
 		{
 			return glm::lookAt(eye, center, up);
 		}
 
-		static __UTILS_INLINE Mat4 __UTILS_FASTCALL Translate(const Mat4& m, const Vec3& v)
+		static __SGOL_INLINE Mat4 __SGOL_FASTCALL Translate(const Mat4& m, const Vec3& v)
 		{
 			return glm::translate(m, v);
 		}
 
-		static __UTILS_INLINE float __UTILS_FASTCALL Q_Sqrt1(float n)
+		static __SGOL_INLINE float __SGOL_FASTCALL Q_Sqrt1(float n)
 		{
 			//unsigned int i = *(unsigned int*)&n;
 			//// adjust bias
@@ -262,7 +262,7 @@ namespace Utils {
 		/// </summary>
 		/// <param name="n"></param>
 		/// <returns></returns>
-		static __UTILS_INLINE float __UTILS_FASTCALL Q_Rsqrt(float n)
+		static __SGOL_INLINE float __SGOL_FASTCALL Q_Rsqrt(float n)
 		{
 			long i;
 			float x2, y;
@@ -278,28 +278,28 @@ namespace Utils {
 			return y;
 		}
 
-		static __UTILS_INLINE float __UTILS_FASTCALL Q_Sqrt(float n)
+		static __SGOL_INLINE float __SGOL_FASTCALL Q_Sqrt(float n)
 		{
 			return 1.0f / Q_Rsqrt(n);
 		}
 
-		static __UTILS_INLINE float __UTILS_FASTCALL Q_Length(const Vec3& a)
+		static __SGOL_INLINE float __SGOL_FASTCALL Q_Length(const Vec3& a)
 		{
 			return Q_Sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
 		}
 
-		static __UTILS_INLINE float __UTILS_FASTCALL Q_Distance(const Vec3& a, const Vec3& b)
+		static __SGOL_INLINE float __SGOL_FASTCALL Q_Distance(const Vec3& a, const Vec3& b)
 		{
 			return Q_Length(b - a);
 		}
 
 		template<typename T>
-		static __UTILS_INLINE T __UTILS_FASTCALL Q_Normalize(const T& t)
+		static __SGOL_INLINE T __SGOL_FASTCALL Q_Normalize(const T& t)
 		{
 			return t * Q_Rsqrt(Dot(t, t));
 		}
 
-		static __UTILS_INLINE Vec3 __UTILS_FASTCALL Refract(const Vec3& uv, const Vec3& n, float etai_over_etat)
+		static __SGOL_INLINE Vec3 __SGOL_FASTCALL Refract(const Vec3& uv, const Vec3& n, float etai_over_etat)
 		{
 			float cos_theta = Min(Dot(-uv, n), 1.0f);
 			Vec3 r_out_perp = (uv + cos_theta * n) * etai_over_etat;
@@ -307,7 +307,7 @@ namespace Utils {
 			return r_out_perp + r_out_paralle;
 		}
 
-		static __UTILS_INLINE Vec3 __UTILS_FASTCALL Reflect(const Vec3& v, const Vec3& n)
+		static __SGOL_INLINE Vec3 __SGOL_FASTCALL Reflect(const Vec3& v, const Vec3& n)
 		{
 			return v - 2.0f * Dot(v, n) * n;
 		}

@@ -2,41 +2,51 @@
 
 #define __SGOL_ENABLE_ALL
 
+#if 0
+#define __SGOL_NO_MACRO
+#endif
+
 #ifdef __SGOL_ENABLE_ALL
 	#define __SGOL_HAS_FASTCALL
 	#define __SGOL_HAS_INLINE
 	#define __SGOL_FORCEINLINE
 	#define __SGOL_HAS_NODISCARD
+	#define __SGOL_NO_CONSTEXPR
 #endif // __SGOL_ENABLE_ALL
 
-#ifdef __SGOL_HAS_FASTCALL
-	#define __SGOL_FASTCALL __fastcall
-#else
-	#define __SGOL_FASTCALL
-#endif //__SGOL_HAS_FASTCALL
-
-#ifdef __SGOL_HAS_INLINE
-	#ifdef __SGOL_FORCEINLINE
-		#define __SGOL_INLINE __forceinline
+#ifndef __SGOL_NO_MACRO
+	#ifdef __SGOL_HAS_FASTCALL
+		#define __SGOL_FASTCALL __fastcall
 	#else
-		#define __SGOL_INLINE inline
-	#endif
-#else
-	#define __SGOL_INLINE
-#endif //__SGOL_HAS_INLINE
+		#define __SGOL_FASTCALL
+	#endif //__SGOL_HAS_FASTCALL
+	
+	#ifdef __SGOL_HAS_INLINE
+		#ifdef __SGOL_FORCEINLINE
+			#define __SGOL_INLINE __forceinline
+		#else
+			#define __SGOL_INLINE inline
+		#endif
+	#else
+		#define __SGOL_INLINE
+	#endif //__SGOL_HAS_INLINE
+	
+	#ifdef __SGOL_HAS_NODISCARD
+		#define __SGOL_NODISCARD [[nodiscard]]
+	#else
+		#define __SGOL_NODISCARD
+	#endif // __SGOL_HAS_NODISCARD
+	
+	#ifdef __SGOL_ENABLE_ALL
+		#undef __SGOL_HAS_FASTCALL
+		#undef __SGOL_HAS_INLINE
+		#undef __SGOL_FORCEINLINE
+		#undef __SGOL_HAS_NODISCARD
+	#endif // __SGOL_HAS_NODISCARD
 
-#ifdef __SGOL_HAS_NODISCARD
-	#define __SGOL_NODISCARD [[nodiscard]]
-#else
-	#define __SGOL_NODISCARD
-#endif // __SGOL_HAS_NODISCARD
+	#undef __SGOL_NO_MACRO
 
-#ifdef __SGOL_ENABLE_ALL
-	#undef __SGOL_HAS_FASTCALL
-	#undef __SGOL_HAS_INLINE
-	#undef __SGOL_FORCEINLINE
-	#undef __SGOL_HAS_NODISCARD
-#endif // __SGOL_HAS_NODISCARD
+#endif // __SGOL_NO_MACRO
 
 #ifdef __SGOL_ENABLE_MEM_TRACKER
 #undef __SGOL_ENABLE_MEM_TRACKER

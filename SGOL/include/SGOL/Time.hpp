@@ -3,12 +3,12 @@
 #include <cstdint>
 #include <ctime>
 
-#include "Utils.h"
+#include "SGOL.hpp"
 
 /// <summary>
 /// 
 /// </summary>
-namespace Utils {
+namespace SGOL {
 	/// <summary>
 	/// 
 	/// </summary>

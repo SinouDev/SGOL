@@ -1,0 +1,3 @@
+[submodule "SGOL/vendor/GLM"]
+	path = SGOL/vendor/GLM
+	url = https://github.com/SinouDev/glm.git

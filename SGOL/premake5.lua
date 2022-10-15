@@ -5,14 +5,18 @@ project "SGOL"
    targetdir "bin/%{cfg.buildcfg}"
    staticruntime "off"
 
-   files { "src/**.h", "src/**.cpp", "include/**.hpp" }
+   files { 
+      "src/**.h", "src/**.cpp", "include/**.hpp",
+      "vendor/GLM/glm/**.hpp"
+    }
 
    targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
    objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
 
    includedirs
    {
-      "include/"
+      "include/",
+      "vendor/GLM/"
    }
 
    filter "system:windows"

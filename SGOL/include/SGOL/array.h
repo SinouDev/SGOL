@@ -1,20 +1,20 @@
 #pragma once
 
-#include "sgol.h"
+#include "SGOL.hpp"
 
-namespace sgol {
+namespace SGOL {
 
 	template<typename Type, size_t size>
 	class array
 	{
 	public:
 
-		_SGOL_INLINE Type& _SGOL_FASTCALL operator[](size_t index) { return m_Data[index]; }
-		_SGOL_INLINE const Type& _SGOL_FASTCALL operator[](size_t index) const { return m_Data[index]; }
+		__SGOL_INLINE Type& __SGOL_FASTCALL operator[](size_t index) { return m_Data[index]; }
+		__SGOL_INLINE const Type& __SGOL_FASTCALL operator[](size_t index) const { return m_Data[index]; }
 
-		_SGOL_INLINE Type& _SGOL_FASTCALL Data() { return m_Data; }
+		__SGOL_INLINE Type& __SGOL_FASTCALL Data() { return m_Data; }
 
-		_SGOL_CONSTEXPR _SGOL_INLINE size_t _SGOL_FASTCALL Size() { return size; }
+		__SGOL_CONSTEXPR __SGOL_INLINE size_t _SGOL_FASTCALL Size() { return size; }
 
 	private:
 		Type m_Data[size];

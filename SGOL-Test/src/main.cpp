@@ -2,6 +2,8 @@
 #define __SGOL_ENABLE_MEM_TRACKER
 #include "SGOL/Reference.hpp"
 
+#include "EntityTest.hpp"
+
 #include <memory>
 
 int main(void)
