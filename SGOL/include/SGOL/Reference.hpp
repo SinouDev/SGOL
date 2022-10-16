@@ -55,6 +55,16 @@ namespace SGOL {
 				delete m_Ptr;
 			}
 
+			__SGOL_INLINE Ptr Get()
+			{
+				return m_Ptr;
+			}
+
+			__SGOL_INLINE const Ptr Get() const
+			{
+				return m_Ptr;
+			}
+
 		public:
 
 			template<typename>
@@ -85,7 +95,12 @@ namespace SGOL {
 
 		public:
 
-			__SGOL_INLINE T* Get()
+			__SGOL_INLINE Ptr Get()
+			{
+				return m_Ptr;
+			}
+
+			__SGOL_INLINE const Ptr Get() const
 			{
 				return m_Ptr;
 			}
@@ -111,13 +126,6 @@ namespace SGOL {
 			{
 
 			}
-
-			//template<typename U, typename... Args>
-			//__SGOL_INLINE SharedObject(Args&&... args)
-			//	: m_Count(1), m_Ptr(new U(std::forward<Args>(args)...))
-			//{
-			//
-			//}
 
 			__SGOL_INLINE SharedObject(Ptr ptr)
 				: m_Count(1), m_Ptr(ptr)
@@ -151,12 +159,13 @@ namespace SGOL {
 		{
 		private:
 
-			using SharedObjectInstance = SharedObject<T>;
+			using SharedObjectInstance    = SharedObject<T>;
 			using SharedObjectInstancePtr = SharedObjectInstance*;
-			using SharedPtr = typename SharedObjectInstance::Ptr;
+			using SharedPtr               = typename SharedObjectInstance::Ptr;
+			//using SharedPtrType           = typename SharedPtr;
 
 			template<typename U, typename B>
-			constexpr static bool s_IsConvertable = IsConvertable<typename Shared<U>::SharedPtr, typename Shared<B>::SharedPtr>();
+			constexpr static bool s_IsConvertable = IsConvertable<Shared<U>::SharedPtr, Shared<B>::SharedPtr>();
 
 		public:
 
@@ -193,16 +202,26 @@ namespace SGOL {
 					delete m_SharedObject;
 			}
 
-			__SGOL_INLINE T* operator->()
+			__SGOL_INLINE SharedPtr operator->()
 			{
 				return m_SharedObject->m_Ptr;
 			}
 
-			__SGOL_INLINE const T* operator->() const
+			__SGOL_INLINE const SharedPtr operator->() const
 			{
 				return m_SharedObject->m_Ptr;
 			}
 
+
+			__SGOL_INLINE SharedPtr Get()
+			{
+				return m_SharedObject->Get();
+			}
+
+			__SGOL_INLINE const SharedPtr Get() const
+			{
+				return m_SharedObject->Get();
+			}
 
 			template<typename U>
 			__SGOL_INLINE Shared(U* right)
@@ -231,12 +250,13 @@ namespace SGOL {
 		{
 		private:
 
-			using SharedObjectInstance = SharedObject<T>;
+			using SharedObjectInstance    = SharedObject<T>;
 			using SharedObjectInstancePtr = SharedObjectInstance*;
-			using SharedPtr = typename SharedObjectInstance::Ptr;
+			using SharedPtr               = typename SharedObjectInstance::Ptr;
+			//using SharedPtrType           = typename SharedPtr;
 
 			template<typename U, typename B>
-			constexpr static bool s_IsConvertable = IsConvertable<typename Shared<U>::SharedPtr, typename Shared<B>::SharedPtr>();
+			constexpr static bool s_IsConvertable = IsConvertable<Shared<U>::SharedPtr, Shared<B>::SharedPtr>();
 
 		public:
 
@@ -253,7 +273,17 @@ namespace SGOL {
 				return m_SharedObject->m_Ptr;
 			}
 
-			__SGOL_INLINE const T* operator->() const
+			__SGOL_INLINE const SharedPtr operator->() const
+			{
+				return m_SharedObject->m_Ptr;
+			}
+
+			__SGOL_INLINE SharedPtr Get()
+			{
+				return m_SharedObject->m_Ptr;
+			}
+
+			__SGOL_INLINE const SharedPtr Get() const
 			{
 				return m_SharedObject->m_Ptr;
 			}

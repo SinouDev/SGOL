@@ -191,7 +191,7 @@ namespace SGOL {
 	{
 		constexpr static char* s_BytesFormats[] = {"%.0f Bytes", "%.2f KB", "%.2f MB" , "%.2f GB", "%.2f TB"};
 		auto value_power = static_cast<size_t>(log10(value) / 3.0);
-		sprintf(buffer, s_BytesFormats[value_power], value / (pow(1000.0, value_power) + 1ULL));
+		sprintf(buffer, s_BytesFormats[value_power], value / (pow(1024.0, value_power) + 1ULL));
 	}
 
 	template<bool enable, typename T = void>
@@ -240,7 +240,7 @@ namespace SGOL {
 std::ostream& operator<< (std::ostream& stream, const MemUse::CurrentInUseAllocationInfo& info)
 {
 	char buf[64];
-	SGOL::ConvertToBytesUnits(info.CurrentInUseAllocationSize, buf);
+	SGOL::ConvertToBytesUnits(static_cast<double>(info.CurrentInUseAllocationSize), buf);
 	stream << "\tIn use Allocations: " << info.CurrentInUseAllocationCount << ", size: " << buf;
 	return stream;
 }
@@ -248,9 +248,9 @@ std::ostream& operator<< (std::ostream& stream, const MemUse::CurrentInUseAlloca
 std::ostream& operator<< (std::ostream& stream, const MemUse::TotalAllocationDeallocationInfo& info)
 {
 	char allocationBuf[64];
-	SGOL::ConvertToBytesUnits(info.m_TotalAllocationSize, allocationBuf);
+	SGOL::ConvertToBytesUnits(static_cast<double>(info.m_TotalAllocationSize), allocationBuf);
 	char deallocationBuf[64];
-	SGOL::ConvertToBytesUnits(info.m_TotalAllocationSize, deallocationBuf);
+	SGOL::ConvertToBytesUnits(static_cast<double>(info.m_TotalAllocationSize), deallocationBuf);
 	stream << "\tTotal Allocations: " << info.m_TotalAllocationCount << ", size: " << allocationBuf << std::endl;
 	stream << "\tTotal Deallocations: " << info.m_TotalDeallocationCount << ", size: " << deallocationBuf;
 	return stream;

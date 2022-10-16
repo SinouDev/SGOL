@@ -10,8 +10,6 @@
 int main(void)
 {
     using namespace SGOL;
-
-	//a();
 		
 	{
 		auto a = Reference::MakeShared<Player>(545U, 2441U);
@@ -40,11 +38,13 @@ int main(void)
 			std::cout << g_MemUse;
 
 			Reference::Unique<Entity> player = Reference::MakeUnique<Player>(100U, 510U);
+
+			player->Method();
+			player->MethodPure();
+
 		}
 
 		std::cout << g_MemUse;
-		//player->Method();
-		//player->MethodPure();
 		//Reference::Unique<Entity> entity = player;
 		//entity->Method();
 
