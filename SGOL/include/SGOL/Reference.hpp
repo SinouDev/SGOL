@@ -23,16 +23,6 @@ namespace SGOL {
 
 		public:
 
-			__SGOL_INLINE Ptr operator->()
-			{
-				return m_Ptr;
-			}
-
-			__SGOL_INLINE const Ptr operator->() const
-			{
-				return m_Ptr;
-			}
-
 			__SGOL_INLINE Unique(const Unique&) = delete;
 			__SGOL_INLINE Unique& operator=(const Unique&) = delete;
 
@@ -55,12 +45,34 @@ namespace SGOL {
 				delete m_Ptr;
 			}
 
-			__SGOL_INLINE Ptr Get()
+			__SGOL_NODISCARD __SGOL_INLINE Ptr Get()
 			{
 				return m_Ptr;
 			}
 
-			__SGOL_INLINE const Ptr Get() const
+			__SGOL_NODISCARD __SGOL_INLINE const Ptr Get() const
+			{
+				return m_Ptr;
+			}
+
+			template<typename U, typename EnableIf<s_IsConvertable<U, T>, bool>::Type = true>
+			__SGOL_NODISCARD __SGOL_INLINE U* Get()
+			{
+				return static_cast<U*>(m_Ptr);
+			}
+
+			template<typename U, typename EnableIf<s_IsConvertable<U, T>, bool>::Type = true>
+			__SGOL_NODISCARD __SGOL_INLINE const U* Get() const
+			{
+				return static_cast<U*>(m_Ptr);
+			}
+
+			__SGOL_INLINE Ptr operator->()
+			{
+				return m_Ptr;
+			}
+
+			__SGOL_INLINE const Ptr operator->() const
 			{
 				return m_Ptr;
 			}

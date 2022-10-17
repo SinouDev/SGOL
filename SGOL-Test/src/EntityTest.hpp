@@ -76,6 +76,12 @@ public:
 		// Do something
 		std::cout << "I am a pure method of Player" << std::endl;
 	}
+
+	void PlayerOnlyMethod() const
+	{
+		// Do something
+		std::cout << "I am a player only method" << std::endl;
+	}
 };
 
 #endif // __SGOL_TEST_SAMPLE

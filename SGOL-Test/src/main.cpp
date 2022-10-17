@@ -42,6 +42,14 @@ int main(void)
 			player->Method();
 			player->MethodPure();
 
+			player.Get()->Method();
+
+			player.Get<Player>()->PlayerOnlyMethod();
+
+			//Reference::Unique<Player> ad = player.Get<Player>();
+
+			//ad->PlayerOnlyMethod();
+
 		}
 
 		std::cout << g_MemUse;
@@ -56,12 +64,16 @@ int main(void)
 		//Player pl(10U, 50U);
 		
 		//std::cin.get();
-		SGOL::Array2D<Player> array(400, 400);
+		SGOL::Array2D<Player> array(4000, 4000);
 		std::cout << g_MemUse;
+
+		std::cin.get();
 		
 	}
 
 	std::cout << g_MemUse;
+
+	std::cin.get();
 
     return 0;
 }
