@@ -45,6 +45,14 @@ public:
 		//std::cout << "I am a method of Entity" << std::endl;
 	}
 
+	inline uint32_t GetX() const { return m_X; }
+	inline uint32_t GetY() const { return m_Y; }
+
+	inline void SetX(uint32_t x) { m_X = x; }
+	inline void SetY(uint32_t y) { m_Y = y; }
+
+	inline void Set(uint32_t x, uint32_t y) { m_X = x; m_Y = y; }
+
 private:
 	uint32_t m_X, m_Y;
 };

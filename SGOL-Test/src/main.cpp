@@ -2,14 +2,34 @@
 #define __SGOL_ENABLE_MEM_TRACKER
 #include "SGOL/Reference.hpp"
 #include "SGOL/Array2D.hpp"
+#include "SGOL/Array.h"
 
 #include "EntityTest.hpp"
 
 #include <memory>
+#include <array>
 
 int main(void)
 {
     using namespace SGOL;
+
+	using Array = Array<Player, 10>;
+
+	Array array;
+
+	//array.Fill();
+	
+	array[5].Set(54, 60);
+
+	for (const auto& a : array)
+	{
+		std::cout << "Player(x: " << a.GetX() << ", y: " << a.GetY() << ");" << std::endl;
+	}
+
+	for (Array::Iterator it = array.begin(); it != array.end(); it++)
+	{
+		std::cout << "Player(x: " << it->GetX() << ", y: " << it->GetY() << ");" << std::endl;
+	}
 		
 	{
 		auto a = Reference::MakeShared<Player>(545U, 2441U);
@@ -64,7 +84,7 @@ int main(void)
 		//Player pl(10U, 50U);
 		
 		//std::cin.get();
-		SGOL::Array2D<Player> array(4000, 4000);
+		SGOL::Array2D<Player> array(40000, 40000);
 		std::cout << g_MemUse;
 
 		std::cin.get();

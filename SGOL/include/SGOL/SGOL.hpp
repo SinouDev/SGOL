@@ -154,14 +154,18 @@ static MemUse g_MemUse;
 #include <stdlib.h>
 void* __SGOL__CDECL operator new(size_t size)
 {
-	g_MemUse.TotalAllocationDeallocation << size;
-	return malloc(size);
+	void* ptr;
+	if(ptr = malloc(size))
+		g_MemUse.TotalAllocationDeallocation << size;
+	return ptr;
 }
 
 void* __SGOL__CDECL operator new[](size_t size)
 {
-	g_MemUse.TotalAllocationDeallocation << size;
-	return malloc(size);
+	void* ptr;
+	if (ptr = malloc(size))
+		g_MemUse.TotalAllocationDeallocation << size;
+	return ptr;
 }
 
 void __SGOL__CDECL operator delete(void* address, size_t size) __SGOL_NOEXCEPT

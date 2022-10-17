@@ -18,6 +18,7 @@ namespace SGOL {
 			: m_Width(width), m_Height(height), m_Size(width * height)
 		{
 			m_Data = new DataType[m_Size];
+			_ASSERT(m_Data);
 		}
 
 		__SGOL_INLINE Array2D()
