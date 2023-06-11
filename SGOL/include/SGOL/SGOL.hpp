@@ -72,10 +72,9 @@
 
 #undef __SGOL_NO_MACRO
 
-#define __SGOL_ENABLE_MEM_TRACKER
+//#define __SGOL_ENABLE_MEM_TRACKER
 
 #ifdef __SGOL_ENABLE_MEM_TRACKER
-
 #include <iostream>
 
 struct MemUse
@@ -149,7 +148,7 @@ struct MemUse
 
 };
 
-static MemUse g_MemUse;
+static __device__ MemUse g_MemUse;
 
 #include <stdlib.h>
 void* __SGOL__CDECL operator new(size_t size)
@@ -188,8 +187,6 @@ void __SGOL__CDECL operator delete[](void* address, size_t size) __SGOL_NOEXCEPT
 // ****** Simple Graphic's Optimized Library (SGOL) ******
 //   Simple c++ template library just like std template library on c++ but focused more on performanceand graphics applications like Game Engines, Renderersand so on
 namespace SGOL {
-
-	
 
     static void ConvertToBytesUnits(double value, char* buffer)
 	{

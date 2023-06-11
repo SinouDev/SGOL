@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SGOL.hpp"
+#include "cuda_runtime.h"
 
 namespace SGOL {
 	
@@ -14,6 +15,10 @@ namespace SGOL {
 	{
 	public:
 
+		using Type = DataType;
+
+	public:
+
 		__SGOL_INLINE Array2D(size_t width, size_t height)
 			: m_Width(width), m_Height(height), m_Size(width * height)
 		{
@@ -24,14 +29,31 @@ namespace SGOL {
 		__SGOL_INLINE Array2D()
 		{}
 
-		~Array2D()
+		virtual __device__ __host__ ~Array2D()
 		{
+			if (m_UserHandle)
+				return;
 			if constexpr (std::is_class_v<DataType>)
 				delete[] m_Data;
 			else delete m_Data;
 		}
 
+		DataType* begin()
+		{
+			return &m_Data[0];
+		}
+
+		DataType* end()
+		{
+			return &m_Data[m_Size];
+		}
+
 		__SGOL_INLINE operator const DataType* ()
+		{
+			return m_Data;
+		}
+
+		__SGOL_INLINE operator DataType* ()
 		{
 			return m_Data;
 		}
@@ -56,8 +78,13 @@ namespace SGOL {
 			m_Size = width * height;
 		}
 
+		__host__ __device__ __SGOL_INLINE size_t __SGOL_FASTCALL Index(size_t x, size_t y)
+		{
+			return x + y * m_Width;
+		}
+
 		// Resize will delete old data without saving it
-		__SGOL_INLINE void __SGOL_FASTCALL Resize(size_t width, size_t height)
+		virtual __SGOL_INLINE void __SGOL_FASTCALL Resize(size_t width, size_t height)
 		{
 			delete[] m_Data;
 
@@ -76,23 +103,23 @@ namespace SGOL {
 		}
 		
 		template<typename T>
-		__SGOL_INLINE T __SGOL_FASTCALL Width() const
+		__host__ __device__ __SGOL_INLINE T __SGOL_FASTCALL Width() const
 		{
 			return static_cast<T>(m_Width);
 		}
 
-		__SGOL_INLINE size_t __SGOL_FASTCALL Width() const
+		__device__ __host__ __SGOL_INLINE size_t __SGOL_FASTCALL Width() const
 		{
 			return m_Width;
 		}
 		
 		template<typename T>
-		__SGOL_INLINE T __SGOL_FASTCALL Height() const
+		__host__ __device__ __SGOL_INLINE T __SGOL_FASTCALL Height() const
 		{
 			return static_cast<T>(m_Height);
 		}
 
-		__SGOL_INLINE size_t __SGOL_FASTCALL Height() const
+		__host__ __device__ __SGOL_INLINE size_t __SGOL_FASTCALL Height() const
 		{
 			return m_Height;
 		}
@@ -103,7 +130,7 @@ namespace SGOL {
 			return static_cast<T>(m_Size);
 		}
 
-		__SGOL_INLINE size_t __SGOL_FASTCALL Size() const
+		__host__ __device__ __SGOL_INLINE size_t __SGOL_FASTCALL Size() const
 		{
 			return m_Size;
 		}
@@ -134,17 +161,17 @@ namespace SGOL {
 			return *this;
 		}
 
-		__SGOL_INLINE DataType& __SGOL_FASTCALL operator()(size_t x, size_t y)
+		__device__ __host__ __SGOL_INLINE DataType& __SGOL_FASTCALL operator()(size_t x, size_t y)
 		{
 			return m_Data[x + y * m_Width];
 		}
 
-		const __SGOL_INLINE DataType& __SGOL_FASTCALL operator()(size_t x, size_t y) const
+		__device__ __host__ __SGOL_INLINE const DataType& __SGOL_FASTCALL operator()(size_t x, size_t y) const
 		{
 			return m_Data[x + y * m_Width];
 		}
 
-		__SGOL_INLINE DataType& __SGOL_FASTCALL operator[](size_t i)
+		__device__ __host__ __SGOL_INLINE DataType& __SGOL_FASTCALL operator[](size_t i)
 		{
 			return m_Data[i];
 		}
@@ -160,11 +187,12 @@ namespace SGOL {
 			return m_Data[i];
 		}
 
-	private:
+	protected:
 
 		size_t m_Width = 0;
 		size_t m_Height = 0;
 		size_t m_Size = 0;
 		DataType* m_Data = nullptr;
+		bool m_UserHandle = false;
 	};
 }
