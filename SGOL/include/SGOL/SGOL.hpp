@@ -233,6 +233,11 @@ namespace SGOL {
 	struct IsConvertable : BoolConstant<std::is_convertible_v<From, To>> {
 
 	};
+
+	template<typename _A, typename _B>
+	struct IsTheSameAs : BoolConstant<std::is_same_v<_A, _B>> {
+
+	};
 }
 
 #ifdef __SGOL_ENABLE_MEM_TRACKER

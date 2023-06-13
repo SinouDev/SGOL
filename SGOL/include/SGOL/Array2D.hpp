@@ -17,6 +17,13 @@ namespace SGOL {
 
 		using Type = DataType;
 
+	private:
+		using Array2DInstance = Array2D<Type>;
+		using DataTypeName = typename Array2DInstance::Type;
+
+		//template<typename _A, typename _B>
+		//static constexpr bool s_IsTheSameAs = IsTheSameAs<Array2D<_A>::DataTypeName, Array2D<_B>::DataTypeName>();
+
 	public:
 
 		__SGOL_INLINE Array2D(size_t width, size_t height)
@@ -186,6 +193,17 @@ namespace SGOL {
 		{
 			return m_Data[i];
 		}
+
+
+		template<typename U>//, typename EnableIf<s_IsTheSameAs<U, DataType>, bool>::Type = true>
+        __SGOL_INLINE void __SGOL_FASTCALL From(const Array2D<U>& from)
+        {
+			if constexpr (!std::is_same_v<Type, U>)
+			{
+				static_assert(false, "You should use the same data");
+			}
+			Resize(from.m_Width, from.m_Height);
+        }
 
 	protected:
 
